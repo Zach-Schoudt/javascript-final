@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title> Game Over </title>
+      <script src="https://simplycodingcourses.com/files/simplyjs/simply.js"></script>
+      <script>
+         function start(){
+            sjs.open();
+            var win_txt = new sjs.Text("You Win!", 30, "black");
+            win_txt.centerH();
+            
+            var menu_btn = new sjs.Button("Return to menu", function(){
+               window.location = "index.html";
+            });
+         } //end start
+      </script>
+   </head>
+   <body onload="start()">
+      <h1> Game Over! </h1>
+
+      <div id="target" style="margin:auto;background:grey;"></div>
+   </body>
+</html>

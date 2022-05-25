@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title> Menu </title>
+      <script src="https://simplycodingcourses.com/files/simplyjs/simply.js"></script>
+      <script>
+         function start(){
+            sjs.open(500, 500);
+            var menu_txt = new sjs.Text("Menu", 28, "blue");
+            menu_txt.centerH();
+            var help_txt = new sjs.Text("Avoid the enemies(red) and stay alive for 10 waves of enemies that slowly spawn faster. Be careful not to run out of lives, otherwise you have to restart", 20,"#ff0"); 
+            help_txt.centerH().offset(0, 30);
+            
+            var start = new sjs.Button("Start", function(){
+               window.location = "game.html";
+            });
+            
+            start.center();
+            
+            var info_text = new sjs.Text("Created By Zach Schoudt",20,"black");
+
+            info_text.bottom().centerH();
+         } //end start
+      </script>
+   </head>
+   <body onload="start()">
+      <h1> Menu </h1>
+
+      <div id="target" style="margin:auto;background:grey;"></div>
+   </body>
+</html>

@@ -1,0 +1,135 @@
+<html>
+   <head>
+      <title> Custom Game </title>
+      <script src="https://simplycodingcourses.com/files/simply.js"></script>
+      <script>
+         function start(){
+            sjs.open("target",500,400);
+            var enemies = [];
+            var canSpawn = true;
+            var enemy_rate = 2000;
+            var lives = 3;
+            var wave = 1;
+            var timer = 30;
+            var timer_interval = 5;
+            var wave_txt = new sjs.Text("Wave: 1", 21, "orange");
+            var lives_txt = new sjs.Text("Lives: 3", 19, "black");
+            var timer_txt = new sjs.Text("Timer: 30", 21, "black");
+                                         
+            lives_txt.centerH();
+            timer_txt.right();
+            
+            
+            //Player object
+            var player = new sjs.Image("Images/player.png");
+            player.type = "player";
+            player.friction = 1; //Strong
+            player.accel = 1;
+            player.setSize(30,30);
+            player.center();
+            
+            
+            //Player movement
+            sjs.keyDown(RIGHT_KEY,function(){
+               player.pushRight();
+            });
+            sjs.keyDown(LEFT_KEY,function(){
+               player.pushLeft();
+            });
+            sjs.keyDown(UP_KEY,function(){
+               player.pushUp();
+            });
+            sjs.keyDown(DOWN_KEY,function(){
+               player.pushDown();
+            });
+            //Timer logic
+            setInterval(function(){
+               if(canSpawn == false){
+                  return;
+               }
+               if(timer >= 1){
+                  timer = timer - 1;
+                  timer_txt.setText("Timer: "+timer);
+               }else{
+                  for(i = enemies.length; i < 0; i++){
+                     enemies[i].destroy();
+                  }
+                  enemies = [];
+                  alert("Wave passed!");
+                  wave = wave + 1;
+                  timer = 30;
+                  timer_txt.setText("Timer: 30");
+                  if(wave >= 10){
+                     window.location = "win.html";
+                  }
+                  canSpawn = false;
+                  enemy_rate = enemy_rate - 250;
+                  if(enemy_rate < 500) {
+                     enemy_rate = 500;
+                  }
+                  wave_txt.setText("Wave: "+wave);
+                  setTimeout(function(){
+                     timer = timer + timer_interval;
+                     if(timer > 60){
+                        timer = 60;
+                     }
+                     canSpawn = true;
+                  }, 4000);
+               }
+            }, 1000);
+            
+            //Enemies
+            setInterval(function(){
+               if(canSpawn == false){
+                  return;
+               }
+               var speed = Math.round(Math.random()*10);
+               var enemy = new sjs.Image("Images/enemy.png");
+               enemy.type = "enemy";
+               enemy.noBounds = true;
+               enemy.friction = 0;
+               if(Math.random() > 0.5){
+                  enemy.moveTo(-enemy.getWidth(), Math.random()*(enemy.getClamp().y));
+                  enemy.pushRight(speed);
+               }else{
+                  enemy.moveTo(sjs.getWidth(), Math.random()*(enemy.getClamp().y));
+                  enemy.pushLeft(speed);
+               }
+               enemies.push(enemy);
+            }, enemy_rate);
+            sjs.left_screen.offset(-500);
+            sjs.right_screen.offset(500);
+
+            //Collision
+            sjs.onHit("player", "enemy", function(p,enemy){
+               enemy.destroy();
+               lives = lives - 1;
+               if(lives > 0){
+                  for(i = enemies.length; i < 0; i++){
+                     enemies[i].destroy();
+                  }
+                  enemies = [];
+                  canSpawn = false;
+                  player.center();
+                  lives_txt.setText("Lives: "+lives);
+                  setTimeout(function(){
+                     canSpawn = true;
+                  }, 3000);
+               }else{
+                  if(localStorage.getItem("wave") >= wave){
+                     localStorage.setITem("wave", wave);
+                  }
+                  p.destroy();
+                  canSpawn = false;
+                  window.location = "gameover.html"; //Set to game over.
+               }
+            });
+         } //end start
+      </script>
+   </head>
+   <body onload="start()">
+      <h1> Custom Game </h1>
+
+      <div id="target" style="margin:auto;background:grey;"></div>
+   </body>
+</html>
